@@ -1,8 +1,13 @@
+import os
 import emoji
 import pandas as pd
 from collections import Counter
 from wordcloud import WordCloud
 from urlextract import URLExtract
+
+BASE_DIR = os.path.dirname(__file__)
+DATA_DIR = os.path.join(BASE_DIR, "..", "data")
+STOPWORDS_PATH = os.path.join(DATA_DIR, "stopwords.txt")
 
 extract = URLExtract()
 
@@ -37,8 +42,8 @@ def most_busy_users(df):
 
 def create_wordcloud(selected_user, df):
     
-    f = open('../data/stopwords.txt', 'r')
-    stop_words = f.read()
+    with open(STOPWORDS_PATH, "r", encoding="utf-8") as f:
+        stop_words = f.read()
 
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
@@ -62,8 +67,8 @@ def create_wordcloud(selected_user, df):
 
 def most_common_words(selected_user, df):
     
-    f = open('../data/stopwords.txt','r')
-    stop_words = f.read()
+    with open(STOPWORDS_PATH, "r", encoding="utf-8") as f:
+        stop_words = f.read()
 
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
@@ -89,7 +94,7 @@ def emoji_helper(selected_user, df):
 
     emojis = []
     for message in df['message']:
-        emojis.extend([c for c in message if c in emoji.UNICODE_EMOJI['en']])
+        emojis.extend([c for c in message if c in emoji.EMOJI_DATA])
 
     emoji_df = pd.DataFrame(Counter(emojis).most_common(len(Counter(emojis))))
 
