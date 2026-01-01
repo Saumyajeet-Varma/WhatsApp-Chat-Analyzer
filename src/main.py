@@ -4,9 +4,13 @@ from matplotlib import pyplot as plt
 import preprocessor, helper
 
 st.sidebar.title("Whatsapp Chat Analyzer")
+st.sidebar.text("Upload the whatsapp chat")
 
 uploaded_file = st.sidebar.file_uploader("Choose a file")
 if uploaded_file is not None:
+
+    info = None
+
     bytes_data = uploaded_file.getvalue()
     data = bytes_data.decode("utf-8")
     df = preprocessor.preprocess(data)
@@ -124,3 +128,58 @@ if uploaded_file is not None:
             fig, ax = plt.subplots()
             ax.pie(emoji_df[1].head(), labels=emoji_df[0].head(), autopct="%0.2f")
             st.pyplot(fig)
+
+
+info = st.sidebar.button("How to export chat ?") if not uploaded_file else None
+if info and not uploaded_file:
+
+    st.title("📤 How to Export a WhatsApp Chat")
+
+    st.markdown("---")
+
+    # ANDROID SECTION
+    st.header("📱 Android")
+
+    android_steps = [
+        "📱 **Open WhatsApp**",
+        "💬 **Open the chat** you want to export",
+        "⋮ **Tap three dots** → More → Export chat",
+        "🗂️ **Choose export type**: Without media / Include media",
+        "☁️ **Share or save via** Gmail, Google Drive, WhatsApp, etc."
+    ]
+
+    for i, step in enumerate(android_steps, 1):
+        st.info(f"Step {i}: {step}")
+
+    st.success(""" 
+    📄 **Output**
+    - `.txt` → Chat messages  
+    - `.zip` → Chat + media files
+    """)
+
+    st.markdown("---")
+
+    # IPHONE SECTION
+    st.header("🍎 iPhone")
+
+    iphone_steps = [
+        "📱 **Open WhatsApp**",
+        "💬 **Open the chat**",
+        "👤 **Tap the contact/group name** at the top",
+        "📤 **Tap Export Chat**",
+        "🗂️ **Choose** Without Media or Include Media",
+        "☁️ **Share via** Files, Mail, AirDrop, Drive, etc."
+    ]
+
+    for i, step in enumerate(iphone_steps, 1):
+        st.info(f"Step {i}: {step}")
+
+    st.success("""
+    📄 **Output**
+    - `.txt` → Chat messages  
+    - Media files included if selected
+    """)
+
+    st.markdown("---")
+
+    st.warning("⚠️ **Tip:** Export chat **WITHOUT media** for faster analysis and fewer errors.")
